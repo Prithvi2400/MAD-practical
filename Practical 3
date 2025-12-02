@@ -1,0 +1,78 @@
+3. Create an App Using Different Views.
+• Use TextView, Button, and ImageView components. Code:MainActivity.java
+package com.example.ivbutton;
+import android.os.Bundle; import
+android.widget.Button; import
+android.widget.ImageView; import
+android.widget.TextView; import
+androidx.appcompat.app.AppCompatActivity; public
+class MainActivity extends AppCompatActivity {
+private boolean showingDefaultState = true;
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+super.onCreate(savedInstanceState);
+setContentView(R.layout.activity_main);
+TextView greetingTextView = findViewById(R.id.textViewGreeting);
+ImageView iconImageView = findViewById(R.id.imageViewIcon);
+Button changeButton = findViewById(R.id.buttonChange);
+changeButton.setOnClickListener(view -> { if (showingDefaultState)
+{ greetingTextView.setText(R.string.message_clicked);
+iconImageView.setImageResource(R.mipmap.ic_launcher_round);
+changeButton.setText(R.string.button_reset);
+} else {
+greetingTextView.setText(R.string.message_default);
+iconImageView.setImageResource(R.mipmap.ic_launcher);
+changeButton.setText(R.string.button_change);
+}
+showingDefaultState = !showingDefaultState;
+});
+}
+
+2. activity_main.xml
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent" tools:context=".MainActivity">
+<TextView
+android:id="@+id/textViewGreeting"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_marginTop="32dp"
+android:text="@string/message_default"
+android:textAppearance="?attr/textAppearanceHeadline6"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintTop_toTopOf="parent" />
+Output Screen:
+o Demonstrate Android Activity Lifecycle using Log messages.
+The Android Activity Lifecycle represents the different states an activity (screen) goes through
+from when it is created until it is destroyed. Understanding the lifecycle helps developers manage
+how the app behaves when the user opens, closes, or switches between screens.
+Method Description
+onCreate() Called when the activity is first created. Used to initialize UI
+components.
+<ImageView
+android:id="@+id/imageViewIcon"
+android:layout_width="140dp"
+android:layout_height="140dp"
+android:layout_marginTop="24dp"
+android:contentDescription="@string/content_description_launcher"
+android:src="@mipmap/ic_launcher"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintTop_toBottomOf="@id/textViewGreeting" />
+<Button android:id="@+id/buttonChange"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:layout_marginBottom="48dp"
+android:text="@string/button_change"
+app:layout_constraintBottom_toBottomOf="parent"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintTop_toBottomOf="@id/imageViewIcon" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+}
