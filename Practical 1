@@ -1,0 +1,44 @@
+Download Android Studio o Go to:
+https://developer.android.com/studio o Click Download
+Android Studio and accept the terms.
+2. Run the Installer o Double-click the downloaded file
+(android-studio-xxxx.exe).
+o Follow the wizard:
+▪ Select components (Android Studio + Android Virtual
+Device).
+▪ Choose an installation location. ▪ Click Next → Finish.
+3. First Launch Setup o Start Android Studio. o It
+will install the SDK, Emulator, and build tools. o
+Choose Standard setup (recommended). o Wait until
+setup completes.
+b. Create and run a basic “Hello World” Android app. Code:MainActivity.java
+
+
+package com.example.whello;
+import
+androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+public class MainActivity extends AppCompatActivity {
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+super.onCreate(savedInstanceState);
+setContentView(R.layout.activity_main);
+}
+}
+
+3. <?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent" tools:context=".MainActivity">
+<TextView
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Hello World!"
+app:layout_constraintBottom_toBottomOf="parent"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
