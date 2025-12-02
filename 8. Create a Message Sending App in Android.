@@ -1,0 +1,139 @@
+package com.example.messages;
+import androidx.annotation.NonNull; import
+androidx.appcompat.app.AppCompatActivity; import
+androidx.core.app.ActivityCompat; import
+androidx.core.content.ContextCompat;
+import android.Manifest; import
+android.content.pm.PackageManager; import android.os.Bundle;
+import android.telephony.SmsManager; import
+android.text.TextUtils; import android.view.View; import
+android.widget.Button; import android.widget.EditText; import
+android.widget.Toast; public class MainActivity extends
+AppCompatActivity { private static final int REQ_SEND_SMS = 1001;
+private EditText inputPhone; private
+EditText inputMessage; private Button
+buttonSend;
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+super.onCreate(savedInstanceState); setContentView(R.layout.activity_main);
+inputPhone = findViewById(R.id.input_phone); inputMessage =
+findViewById(R.id.input_message); buttonSend =
+findViewById(R.id.button_send);
+buttonSend.setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View v) { attemptSendSms();
+}
+}); }
+private void attemptSendSms() { final String phone =
+inputPhone.getText() != null ? inputPhone.getText().toString().trim() :
+""; final String message = inputMessage.getText() != null ?
+inputMessage.getText().toString().trim() : "";
+if (TextUtils.isEmpty(phone)) {
+Toast.makeText(this, getString(R.string.error_empty_phone),
+Toast.LENGTH_SHORT).show(); return;
+}
+if (TextUtils.isEmpty(message)) {
+Toast.makeText(this, getString(R.string.error_empty_message),
+Toast.LENGTH_SHORT).show(); return;
+}
+if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) !=
+PackageManager.PERMISSION_GRANTED) {
+ActivityCompat.requestPermissions(this, new
+String[]{Manifest.permission.SEND_SMS}, REQ_SEND_SMS);
+return;
+}
+sendSms(phone, message);
+}
+private void sendSms(String phone, String message) { try
+{
+SmsManager smsManager = SmsManager.getDefault();
+smsManager.sendTextMessage(phone, null, message, null, null);
+Toast.makeText(this, getString(R.string.sms_sent),
+Toast.LENGTH_SHORT).show();
+} catch (Exception e) {
+Toast.makeText(this, getString(R.string.sms_failed),
+Toast.LENGTH_SHORT).show();
+}
+}
+@Override
+public void onRequestPermissionsResult(int requestCode, @NonNull String[]
+permissions, @NonNull int[] grantResults) {
+super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+if (requestCode == REQ_SEND_SMS) { if (grantResults.length > 0 &&
+grantResults[0] ==
+PackageManager.PERMISSION_GRANTED) {
+attemptSendSms();
+} else {
+Toast.makeText(this, getString(R.string.permission_required),
+Toast.LENGTH_SHORT).show();
+}
+}
+}
+}
+2.activity_main.xml
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent" tools:context=".MainActivity">
+<TextView android:id="@+id/label_phone"
+android:layout_width="0dp"
+android:layout_height="wrap_content"
+android:text="@string/label_phone"
+app:layout_constraintTop_toTopOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintEnd_toEndOf="parent"
+android:layout_marginStart="16dp"
+android:layout_marginEnd="16dp"
+android:layout_marginTop="24dp" />
+
+<EditText
+android:id="@+id/input_phone"
+android:layout_width="0dp"
+android:layout_height="wrap_content"
+android:inputType="phone"
+android:hint="@string/hint_phone"
+app:layout_constraintTop_toBottomOf="@id/label_phone"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintEnd_toEndOf="parent"
+android:layout_marginStart="16dp"
+android:layout_marginEnd="16dp" android:layout_marginTop="8dp"
+/>
+<TextView
+android:id="@+id/label_message"
+android:layout_width="0dp"
+android:layout_height="wrap_content"
+android:text="@string/label_message"
+app:layout_constraintTop_toBottomOf="@id/input_phone"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintEnd_toEndOf="parent"
+android:layout_marginStart="16dp"
+android:layout_marginEnd="16dp" android:layout_marginTop="16dp"
+/>
+<EditText
+android:id="@+id/input_message"
+android:layout_width="0dp"
+android:layout_height="0dp"
+android:hint="@string/hint_message"
+android:inputType="textMultiLine"
+android:gravity="top|start"
+android:minLines="5"
+app:layout_constraintTop_toBottomOf="@id/label_message"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintBottom_toTopOf="@id/button_send"
+android:layout_marginStart="16dp"
+android:layout_marginEnd="16dp"
+android:layout_marginTop="8dp"
+android:layout_marginBottom="16dp" />
+<Button android:id="@+id/button_send"
+android:layout_width="0dp"
+android:layout_height="wrap_content"
+android:text="@string/action_send"
+app:layout_constraintBottom_toBottomOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintEnd_toEndOf="parent" 
+android:layout_margin="16dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>
