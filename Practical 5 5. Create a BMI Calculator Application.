@@ -1,0 +1,157 @@
+package com.example.calcuatebmi; import
+androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle; import android.text.TextUtils; import
+android.view.View; import android.widget.Button; import
+android.widget.EditText; import android.widget.TextView;
+public class MainActivity extends AppCompatActivity {
+private EditText editHeight; private
+EditText editWeight; private Button
+btnCalculate; private TextView
+txtResult; private TextView
+txtCategory;
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+super.onCreate(savedInstanceState);
+setContentView(R.layout.activity_main);
+editHeight = findViewById(R.id.editHeight); editWeight =
+findViewById(R.id.editWeight); btnCalculate =
+findViewById(R.id.btnCalculate); txtResult =
+findViewById(R.id.txtResult); txtCategory =
+findViewById(R.id.txtCategory);
+btnCalculate.setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View v) { calculateAndDisplayBmi();
+}
+}); }
+private void calculateAndDisplayBmi() {
+String heightInput = editHeight.getText() != null ?
+editHeight.getText().toString().trim() : "";
+String weightInput = editWeight.getText() != null ?
+editWeight.getText().toString().trim() : "";
+boolean hasError = false;
+if (TextUtils.isEmpty(heightInput)) {
+editHeight.setError(getString(R.string.error_required)); hasError
+= true;
+}
+if (TextUtils.isEmpty(weightInput)) {
+editWeight.setError(getString(R.string.error_required)); hasError
+= true;
+}
+if (hasError) { return;
+}
+double heightCm; double weightKg; try {
+heightCm = Double.parseDouble(heightInput);
+} catch (NumberFormatException ex) {
+editHeight.setError(getString(R.string.error_invalid_number));
+return;
+} try { weightKg =
+Double.parseDouble(weightInput);
+} catch (NumberFormatException ex) {
+editWeight.setError(getString(R.string.error_invalid_number));
+return;
+}
+if (heightCm <= 0) {
+editHeight.setError(getString(R.string.error_value_out_of_range));
+return;
+}
+if (weightKg <= 0) {
+editWeight.setError(getString(R.string.error_value_out_of_range));
+return;
+}
+double heightM = heightCm / 100.0; double
+bmi = weightKg / (heightM * heightM);
+String bmiText = getString(R.string.bmi_result_prefix) + " " +
+String.format("%.2f", bmi);
+txtResult.setText(bmiText);
+txtCategory.setText(getBmiCategoryText(bmi));
+}
+private String getBmiCategoryText(double bmi) { if (bmi <
+18.5) { return
+getString(R.string.bmi_category_underweight);
+} else if (bmi < 25.0) { return
+getString(R.string.bmi_category_normal);
+} else if (bmi < 30.0) { return
+getString(R.string.bmi_category_overweight);
+} else { return
+getString(R.string.bmi_category_obese);
+}
+}
+}
+
+
+2. activity_main.xml:
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent" tools:context=".MainActivity">
+<TextView android:id="@+id/txtTitle"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="@string/title_bmi_calculator"
+android:textStyle="bold"
+
+android:textSize="20sp"
+app:layout_constraintTop_toTopOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="24dp" />
+<EditText android:id="@+id/editHeight"
+android:layout_width="0dp"
+android:layout_height="wrap_content"
+android:inputType="numberDecimal"
+android:hint="@string/hint_enter_height"
+android:ems="10"
+app:layout_constraintTop_toBottomOf="@id/txtTitle"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintEnd_toEndOf="parent"
+android:layout_marginStart="24dp" android:layout_marginEnd="24dp"
+android:layout_marginTop="24dp" />
+<EditText android:id="@+id/editWeight"
+android:layout_width="0dp"
+android:layout_height="wrap_content"
+android:inputType="numberDecimal"
+android:hint="@string/hint_enter_weight"
+android:ems="10"
+app:layout_constraintTop_toBottomOf="@id/editHeight"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintEnd_toEndOf="parent"
+android:layout_marginStart="24dp" android:layout_marginEnd="24dp"
+android:layout_marginTop="16dp" />
+<Button android:id="@+id/btnCalculate"
+android:layout_width="0dp"
+android:layout_height="wrap_content"
+android:text="@string/action_calculate"
+app:layout_constraintTop_toBottomOf="@id/editWeight"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintEnd_toEndOf="parent"
+android:layout_marginStart="24dp" android:layout_marginEnd="24dp"
+android:layout_marginTop="24dp" />
+<TextView android:id="@+id/txtResult"
+android:layout_width="0dp"
+android:layout_height="wrap_content"
+android:text="" android:textSize="18sp"
+app:layout_constraintTop_toBottomOf="@id/btnCalculate"
+app:layout_constraintStart_toStartOf="parent" 
+
+app:layout_constraintEnd_toEndOf="parent"
+android:layout_marginStart="24dp" android:layout_marginEnd="24dp"
+android:layout_marginTop="24dp" />
+<TextView android:id="@+id/txtCategory"
+android:layout_width="0dp"
+android:layout_height="wrap_content"
+android:text=""
+android:textSize="16sp"
+app:layout_constraintTop_toBottomOf="@id/txtResult"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintEnd_toEndOf="parent"
+android:layout_marginStart="24dp"
+android:layout_marginEnd="24dp"
+android:layout_marginTop="12dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
