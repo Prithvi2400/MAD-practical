@@ -1,0 +1,182 @@
+4. Implement Intent and Bundle Passing Between Activities Code:MainActivity.java
+package com.example.bpassing; import
+androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent; import
+android.os.Bundle; import android.view.View; import
+android.widget.Button; import
+android.widget.EditText; import android.widget.Toast;
+public class MainActivity extends AppCompatActivity {
+private EditText etName, etAge, etEmail, etMessage; private
+Button btnSendData;
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+super.onCreate(savedInstanceState);
+setContentView(R.layout.activity_main);
+// Initialize views etName =
+findViewById(R.id.etName); etAge =
+findViewById(R.id.etAge); etEmail =
+findViewById(R.id.etEmail); etMessage =
+findViewById(R.id.etMessage); btnSendData =
+findViewById(R.id.btnSendData);
+// Set click listener for button
+btnSendData.setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View v) {
+sendDataToSecondActivity();
+}
+});
+}
+private void sendDataToSecondActivity() {
+// Get input values with null safety
+String name = etName != null ? etName.getText().toString().trim() : "";
+String ageStr = etAge != null ? etAge.getText().toString().trim() : ""; 
+
+String email = etEmail != null ? etEmail.getText().toString().trim() : "";
+String message = etMessage != null ? etMessage.getText().toString().trim() :
+"";
+// Validate inputs
+if (name.isEmpty() || ageStr.isEmpty() || email.isEmpty()) {
+Toast.makeText(this, "Please fill in all required fields",
+Toast.LENGTH_SHORT).show();
+return;
+} int age =
+Integer.parseInt(ageStr);
+// Method 1: Passing data via Intent extras (direct method)
+Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+// Put data directly into Intent extras
+intent.putExtra("name", name);
+intent.putExtra("age", age);
+intent.putExtra("email", email);
+// Method 2: Passing data via Bundle
+Bundle bundle = new Bundle();
+// Only put message if it's not empty if (message != null &&
+!message.isEmpty()) { bundle.putString("message", message);
+} else { bundle.putString("message", "");
+} bundle.putBoolean("isStudent", true); bundle.putDouble("score",
+95.5);
+
+// Attach bundle to Intent intent.putExtras(bundle);
+// Start SecondActivity startActivity(intent);
+} }
+
+2.SecondActivity.java
+package com.example.bpassing; import
+androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent; import
+android.os.Bundle; import
+android.widget.TextView;
+public class SecondActivity extends AppCompatActivity { private TextView
+tvName, tvAge, tvEmail, tvMessage, tvBundleData;
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+super.onCreate(savedInstanceState);
+setContentView(R.layout.activity_second);
+// Initialize views
+tvName = findViewById(R.id.tvName); tvAge =
+findViewById(R.id.tvAge); tvEmail =
+findViewById(R.id.tvEmail); tvMessage =
+findViewById(R.id.tvMessage); tvBundleData =
+findViewById(R.id.tvBundleData);
+// Method 1: Receiving data via Intent extras (direct method) Intent
+intent = getIntent(); if (intent != null) {
+// Get data passed directly via Intent extras String
+name = intent.getStringExtra("name"); int age =
+intent.getIntExtra("age", 0);
+String email = intent.getStringExtra("email");
+// Display the data with null checks if (name !=
+null && !name.isEmpty()) { tvName.setText("Name:
+" + name);
+} else { tvName.setText("Name: Not provided"); }
+
+tvAge.setText("Age: " + String.valueOf(age));
+if (email != null && !email.isEmpty()) { tvEmail.setText("Email:
+" + email);
+} else { tvEmail.setText("Email: Not
+provided"); }
+}
+// Method 2: Receiving data via Bundle
+Bundle bundle = intent != null ? intent.getExtras() : null; if
+(bundle != null) {
+String message = bundle.getString("message");
+boolean isStudent = bundle.getBoolean("isStudent", false); double
+score = bundle.getDouble("score", 0.0);
+if (message != null && !message.isEmpty()) {
+tvMessage.setText("Message: " + message);
+} else { tvMessage.setText("Message: Not
+provided");
+}
+// Display bundle data
+String studentText = isStudent ? "Yes" : "No";
+String scoreText = String.valueOf(score);
+String bundleInfo = "Student: " + studentText + "\n" + "Score: " +
+scoreText; tvBundleData.setText(bundleInfo);
+} else { tvMessage.setText("Message: Not provided");
+tvBundleData.setText("Bundle data: Not provided");
+}
+} }
+
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:padding="16dp" tools:context=".MainActivity">
+<TextView android:id="@+id/tvTitle"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+android:text="Intent &amp; Bundle Passing Demo"
+android:textSize="24sp"
+android:textStyle="bold"
+android:layout_marginTop="32dp"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintTop_toTopOf="parent" />
+<TextView android:id="@+id/tvSubtitle"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+
+android:text="Enter your information:" android:textSize="16sp"
+android:layout_marginTop="16dp" app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+<EditText android:id="@+id/etName" android:layout_width="0dp"
+android:layout_height="wrap_content" android:hint="Enter
+Name" android:inputType="textPersonName"
+android:layout_marginTop="24dp" android:padding="12dp"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintTop_toBottomOf="@+id/tvSubtitle" />
+<EditText android:id="@+id/etAge" android:layout_width="0dp"
+android:layout_height="wrap_content" android:hint="Enter Age"
+android:inputType="number" android:layout_marginTop="16dp"
+android:padding="12dp"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintTop_toBottomOf="@+id/etName" />
+<EditText android:id="@+id/etEmail" android:layout_width="0dp"
+android:layout_height="wrap_content" android:hint="Enter
+Email" android:inputType="textEmailAddress"
+android:layout_marginTop="16dp" android:padding="12dp"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintTop_toBottomOf="@+id/etAge" />
+<EditText android:id="@+id/etMessage" android:layout_width="0dp"
+android:layout_height="wrap_content" android:hint="Enter Message
+(Optional)" android:inputType="textMultiLine"
+android:minLines="3"
+android:layout_marginTop="16dp" android:padding="12dp"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintTop_toBottomOf="@+id/etEmail" />
+<Button android:id="@+id/btnSendData" android:layout_width="0dp"
+android:layout_height="wrap_content" android:text="Send Data to
+Second Activity" android:textSize="16sp
+
+android:layout_marginTop="32dp"
+android:padding="16dp"
+app:layout_constraintEnd_toEndOf="parent"
+app:layout_constraintStart_toStartOf="parent"
+app:layout_constraintTop_toBottomOf="@+id/etMessage" />
+</androidx.constraintlayout.widget.ConstraintLayout>
